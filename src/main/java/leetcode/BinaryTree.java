@@ -57,27 +57,28 @@ public class BinaryTree {
 
 
     public List<Integer> postorderTraversal(TreeNode root) {
-        List<Integer> resultList = new ArrayList<Integer>();
-        Stack<TreeNode> stack = new Stack<TreeNode>();
-        TreeNode current = root;
-        while( current != null ) { // iteratively push left node into stack
-            stack.push(current);
-            current = current.left;
+        List<Integer> result = new ArrayList<>();
+        if(root == null) {
+            return result;
         }
-        stack.push(current); // null left node also need to be pushed into stack
-        while( !stack.isEmpty() ) {
-            current = stack.pop();
-            if( current != null )
-                resultList.add(current.val);
-            if( !stack.isEmpty() && current == stack.peek().left && stack.peek().right != null) { // traverse right part
-                TreeNode left = stack.peek().right;
-                while( left != null ) {
-                    stack.push(left);
-                    left = left.left;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        TreeNode last = root;
+        while(!stack.isEmpty()) {
+            TreeNode node = stack.peek();
+            if((node.left == null && node.right==null) || (node.right == null && last == node.left) || last == node.right) {
+                result.add(node.val);
+                last = node;
+                stack.pop();
+            } else {
+                if(node.right != null) {
+                    stack.push(node.right);
                 }
-                stack.push(left);
+                if(node.left != null) {
+                    stack.push(node.left);
+                }
             }
         }
-        return resultList;
+        return result;
     }
 }
